@@ -1,0 +1,21 @@
+page-home {
+    ion-label {
+        white-space: inherit;
+    }
+    
+    ion-card-header {
+        padding : 10px !important;
+    }
+    
+    ion-card-content {
+        padding: 12px 0 !important;
+    }
+    
+    .label-md {
+        margin: 5px 8px 5px 0;;
+    }
+    
+    ion-item {
+        min-height: initial !important; 
+    }
+}

@@ -1,0 +1,96 @@
+<!--
+  Generated template for the VoteResultPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <page-top-header subtitle="Votes"></page-top-header>
+</ion-header>
+
+<ion-content padding>
+  <ng-container *ngIf="loaded">
+    <ng-container *ngIf="result; else no_vote">
+      <ion-list>
+        <!-- Parcours des catégories -->
+        <ng-container *ngFor="let category of backend.getCachedCategories()">
+          <ion-item *ngIf="result.votesByCategory[category.id] != null && result.votesByCategory[category.id].length > 0">
+            <b>Cat&eacute;gorie {{util.getCategoryName(category.id)}}</b>
+            <!-- Liste des votes -->
+            <ul>
+              <li *ngFor="let vote of result.votesByCategory[category.id]">
+                {{util.getUserName(vote.voterId)}} vote pour {{util.getUsersNames(result.nominationsById[vote.nominationId].usersIds)}}
+                ({{result.nominationsById[vote.nominationId].reason}})<br />
+                Raison : {{vote.reason}}
+              </li>
+            </ul>
+            <!-- Résultat -->
+            <b>R&eacute;sultat :</b>
+            <ng-container [ngSwitch]="result.winnersByCategory[category.id].length">
+              <ng-container *ngSwitchCase="0">Aucun vote</ng-container>
+              <ng-container *ngSwitchCase="1">{{util.getUsersNames(result.winnersByCategory[category.id])}}</ng-container>
+              <ng-container *ngSwitchDefault>
+                <!-- Ex aequo -->
+                ex aequo entre {{util.getUsersNames(result.winnersByCategory[category.id])}}
+              </ng-container>
+            </ng-container>
+            <!-- Les deuxièmes -->
+            <ng-container *ngIf="result.secondsByCategory[category.id] != null">
+              (suivi par {{util.getUsersNames(result.secondsByCategory[category.id])}})
+            </ng-container>        
+            <!-- Décision du président -->
+            <div *ngIf="result.decisionsByCategory[category.id] != null">
+              <b>D&eacute;cision du pr&eacute;sident :</b>
+              <ng-container [ngSwitch]="result.decisionsByCategory[category.id]">
+                <ng-container *ngSwitchCase="-2">Tous</ng-container>
+                <ng-container *ngSwitchDefault>{{util.getUserName(result.decisionsByCategory[category.id])}}</ng-container>
+              </ng-container>
+            </div>
+          </ion-item>
+        </ng-container>
+        <!-- Losers de l'année' --> 
+        <ion-item>
+          <ng-container [ngSwitch]="result.losers.length">
+            <ng-container *ngSwitchCase="0">Aucun vainqueur pour le moment</ng-container>
+            <ng-container *ngSwitchCase="1">Le loser de l'ann&eacute;e est {{util.getUsersNames(result.losers)}} avec {{result.nbAwardsByUser[result.losers[0]]}} r&eacute;compenses</ng-container>
+            <ng-container *ngSwitchDefault>
+              Les losers de l'ann&eacute;e sont {{util.getUsersNames(result.losers)}} avec {{result.nbAwardsByUser[result.losers[0]]}} r&eacute;compenses
+            </ng-container>
+          </ng-container>
+          <ng-container *ngIf="categoriesNotSettled && categoriesNotSettled.length > 0; else no_settle">
+            mais il reste des ex aequo dans les cat&eacute;gories {{util.getCategoriesNames(categoriesNotSettled)}}.  
+          </ng-container>
+          <ng-template #no_settle>
+            <!-- Pas de catégories à départager, s'il y a eu des ex aequo chez les losers de l'année, on annonce le grand loser -->
+            <ng-container *ngIf="result.grandLosers">
+              <ng-container [ngSwitch]="result.grandLosers.length">
+                <ng-container *ngSwitchCase="1">et le Grand Loser est</ng-container> 
+                <ng-container *ngSwitchDefault>et les Grands Losers sont</ng-container>
+              </ng-container>
+              {{util.getUsersNames(result.grandLosers)}}
+              (avec un total de {{result.grandLosersNbVotes}} votes).
+            </ng-container>      
+          </ng-template>
+          <!-- Classement complet -->
+          <ul>
+            <ng-container *ngFor="let rank of getRankingKeys()">
+              <li *ngIf="rank != 1">
+                <!-- Deuxième position : Thierry et Sophie (2 récompenses) -->
+                {{util.getOrdinal(rank)}} :
+                {{util.getUsersNames(result.ranking[rank])}}
+                ({{util.getPlural(result.nbAwardsByUser[result.ranking[rank][0]], "r&eacute;compense")}})
+              </li>
+            </ng-container>
+          </ul>
+        </ion-item>
+      </ion-list>
+      <div padding>
+        <button *ngIf="categoriesToSettle && categoriesToSettle.length > 0" ion-button color="primary" (click)="settle()">D&eacute;partager les ex aequo</button>
+        <button *ngIf="backend.isAdminConnected()" ion-button color="primary" (click)="archive()">Cr&eacute;er une archive</button>
+      </div>
+    </ng-container>
+    <ng-template #no_vote>
+      Aucun vote pour l'instant.
+    </ng-template>
+  </ng-container>
+</ion-content>

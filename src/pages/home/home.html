@@ -1,0 +1,143 @@
+<ion-header>
+  <page-top-header subtitle="Accueil"></page-top-header>
+</ion-header>
+
+<ion-content padding>
+  <ion-grid *ngIf="bundle">
+    <ion-row *ngIf="(news != null) && !(news == '')">
+      <ion-col>
+        <ion-card>
+          <ion-card-content style="padding: 13px 16px !important; font-size: 1.6rem;">
+            {{news}}
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col col-4>
+        <ion-card>
+          <ion-card-header>
+            Derni&egrave;res nominations
+          </ion-card-header>
+          <ion-card-content style="padding-top: 13px;">
+            <ion-list no-lines>
+              <ion-item *ngFor="let nomination of bundle.nominations">
+                <b>{{util.getUsersNames(nomination.usersIds)}}</b> dans la cat&eacute;gorie "{{util.getCategoryName(nomination.categoryId)}}" ({{nomination.reason}})
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col col-4>
+        <ion-card>
+          <ion-card-header>
+            Statistiques
+          </ion-card-header>
+          <ion-card-content style="padding-top: 13px;">
+            <ion-list no-lines>
+              <ion-item *ngFor="let userId of getUsersIds()">
+                {{util.getUserName(userId)}} a &eacute;t&eacute; nomin&eacute; {{bundle.statistiques[userId]}} fois
+              </ion-item>
+              <ion-item>
+                <b>Total :</b> {{bundle.totalNominations}} nominations
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="backend.isAdminConnected()">
+      <ion-col col-4>
+        <ion-card>
+          <ion-card-header>
+            Administration
+          </ion-card-header>
+          <ion-card-content style="padding-top: 13px;">
+            <ion-list no-lines>
+              <ng-container *ngFor="let global of inputGlobals">
+                <ng-container [ngSwitch]="global.key">
+                  <!-- Format des nom -->
+                  <ng-container *ngSwitchCase="KEY_SHOW_LASTNAME">
+                    <ion-item>
+                      <ion-label>Afficher les noms</ion-label>
+                      <ion-toggle [(ngModel)]="global.value"></ion-toggle>
+                    </ion-item>
+                  </ng-container>
+                  <!-- Ouverture des nominations -->
+                  <ng-container *ngSwitchCase="KEY_NOMINATIONS_OPEN">
+                    <ion-item>
+                      <ion-label>Nominations ouverts</ion-label>
+                      <ion-toggle [(ngModel)]="global.value"></ion-toggle>
+                    </ion-item>
+                  </ng-container>
+                  <!-- Ouverture des votes -->
+                  <ng-container *ngSwitchCase="KEY_VOTES_OPEN">
+                    <ion-item>
+                      <ion-label>Votes ouverts</ion-label>
+                      <ion-toggle [(ngModel)]="global.value"></ion-toggle>
+                    </ion-item>
+                  </ng-container>
+                  <!-- Votants -->
+                  <ng-container *ngSwitchCase="KEY_VOTERS_IDS">
+                    <ion-item>
+                      <ion-label>Ont vot&eacute; : {{util.getUsersNames(global.valuesIds)}}</ion-label>                      
+                    </ion-item>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="KEY_NEWS">
+                    <ion-item>
+                      <ion-input [(ngModel)]="global.value" type="text" placeholder="Actualit&eacute;s"></ion-input>         
+                    </ion-item>
+                  </ng-container>
+                  <ng-container *ngSwitchDefault>
+                    <ion-item>
+                      <ion-label>{{global.key}} : {{global.value}}</ion-label>                      
+                    </ion-item>
+                  </ng-container>                   
+                </ng-container>
+              </ng-container>
+            </ion-list>
+            <div padding>
+              <button ion-button color="primary" (click)="save()">Valider</button>
+              <button ion-button color="primary" (click)="deleteVotes()">Supprimer les votes</button>
+              <button ion-button color="primary" (click)="reset()">R&eacute;initialiser</button>
+              <button ion-button color="primary" (click)="clean()">Nettoyer</button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col col-4>
+        <ion-card>
+          <ion-card-header>
+            Restauration
+          </ion-card-header>
+          <ion-card-content style="padding-top: 13px;">
+            <ion-list no-lines>
+              <ion-item>
+                <ion-input [(ngModel)]="restoreURL.url" type="text" placeholder="URL d'import"></ion-input>         
+              </ion-item>
+              <ion-item>
+                <ion-label>Utilisateurs</ion-label>
+                <ion-toggle [(ngModel)]="restoreURL.restoreUsers"></ion-toggle>
+              </ion-item>
+              <ion-item>
+                <ion-label>Cat&eacute;gories et nominations</ion-label>
+                <ion-toggle [(ngModel)]="restoreURL.restoreCategoriesAndNominations"></ion-toggle>
+              </ion-item>
+              <ion-item>
+                <ion-label>Utilisateurs et cat&eacute;gories d'archive</ion-label>
+                <ion-toggle [(ngModel)]="restoreURL.restoreUsersAndCategoriesArchive"></ion-toggle>
+              </ion-item>
+              <ion-item>
+                <ion-label>Archives</ion-label>
+                <ion-toggle [(ngModel)]="restoreURL.restoreArchives"></ion-toggle>
+              </ion-item>
+              <div padding>
+                <button ion-button color="primary" (click)="restore()">Restaurer</button>
+              </div>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

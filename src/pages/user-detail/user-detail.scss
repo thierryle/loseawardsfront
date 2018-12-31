@@ -1,0 +1,37 @@
+page-user-detail {
+    .invalid {
+        border: 1px solid #ea6153;
+    }
+
+    .avatar-button {
+        min-height: 45px;
+        min-width: 75px;
+        z-index: 999;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+    }
+    
+    .new-img {
+        position: absolute;
+        border-radius: 50%;
+        height: 45px;
+        width: 45px;
+    }
+    
+    .user-nominations {
+        font-size: 13px;
+        
+        .user-nomination-header {
+            background: #f8f8f8;
+            border-bottom: 1px solid #EFEFEF;
+            padding: 8px;
+            white-space: inherit;            
+            line-height: 1.6rem;
+        }
+        
+        .user-nominations-content {
+        }
+    }
+    
+}

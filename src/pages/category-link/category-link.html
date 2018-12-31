@@ -1,0 +1,45 @@
+<!--
+  Generated template for the CategoryLinkPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-toolbar>
+    <ion-title>
+      Rapprochement des cat&eacute;gories
+    </ion-title>
+    <ion-buttons start>
+      <button ion-button (click)="dismiss()">
+        <ion-icon name="md-close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content padding>
+  <ion-list *ngIf="categoriesLinks">
+    <form [formGroup]="categoriesLinksForm">
+      <ion-item>
+        <ion-label floating color="primary">Ann&eacute;e</ion-label>
+        <ion-input type="number" formControlName="year" [(ngModel)]="categoriesLinks.year"></ion-input >
+      </ion-item>
+      <div class="valid-error" *ngIf="!categoriesLinksForm.controls.year.valid && (categoriesLinksForm.controls.year.dirty || submitAttempt)">
+        <p *ngIf="categoriesLinksForm.controls.year.errors.required">Veuillez saisir l'ann&eacute;e.</p>
+      </div>
+      <ion-item *ngFor="let categoryId of getCategoriesIds()">
+        <ion-label>{{util.getCategoryName(categoryId)}}</ion-label>
+        <ion-select cancelText="Annuler" okText="OK" placeholder="Cat&eacute;gorie archive" [(ngModel)]="categoriesLinks.links[categoryId]" [ngModelOptions]="{ standalone: true }">
+          <ion-option value="-1">Aucune</ion-option>
+          <ion-option *ngFor="let archiveCategory of categoriesLinks.archiveCategories" [value]="archiveCategory.id">{{util.getCategoryNameFromList(archiveCategory.id, categoriesLinks.archiveCategories)}}</ion-option>
+        </ion-select>
+      </ion-item>
+    </form>
+  </ion-list>
+
+  <div padding>
+    <button ion-button color="primary" block (click)="save()">Valider</button>
+  </div>
+</ion-content>

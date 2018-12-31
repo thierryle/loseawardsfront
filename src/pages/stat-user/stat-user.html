@@ -1,0 +1,72 @@
+<!--
+  Generated template for the StatUserPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-toolbar>
+    <ion-title>
+      Statistiques du comp&eacute;titeur {{util.getDisplayName(user)}}
+    </ion-title>
+    <ion-buttons start>
+      <button ion-button (click)="dismiss()">
+        <ion-icon name="md-close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content padding>
+  <ion-list no-lines *ngIf="stat">
+    <!-- Années de participation -->
+    <ion-item text-wrap>
+      <b>Ann&eacute;es de participation :</b>
+      <ng-container *ngIf="user.lastYear != null; else no_last_year">
+        de {{user.firstYear}} &agrave; {{user.lastYear}}
+      </ng-container>
+      <ng-template #no_last_year>
+        depuis {{user.firstYear}}
+      </ng-template>
+    </ion-item>
+    <!-- Catégories -->
+    <ng-container *ngFor="let categoryId of getWonCategories()">
+      <ion-item *ngIf="categoryId != -1" text-wrap>
+        <!-- Catégorie Boulet : 3 victoires (2009, 2010, 2012) -->
+        {{util.getCategoryNameFromList(categoryId, categories)}} :
+        {{util.getPlural(stat.awardsByCategory[categoryId].length, "victoire")}}
+        ({{stat.awardsByCategory[categoryId].join(', ')}})
+      </ion-item>
+    </ng-container>
+    <!-- Total -->
+    <ion-item *ngIf="nbAwards > 0" text-wrap>
+      <b>Total :</b>
+      {{util.getPlural(nbAwards, "victoire")}}
+      dans
+      {{util.getPlural(nbCategories, "cat&eacute;gorie")}}
+    </ion-item>
+    <!-- Grand Champion -->
+    <ion-item *ngIf="stat.awardsByCategory[-1] != null && stat.awardsByCategory[-1].length > 0" text-wrap>
+      <b>Grand Champion :</b> {{stat.awardsByCategory[-1].length}} fois
+      ({{stat.awardsByCategory[-1].join(', ')}})
+    </ion-item>
+  </ion-list>
+  
+  <!-- Onglets des statistiques -->
+  <ion-segment [(ngModel)]="statType">
+    <ion-segment-button value="division">
+      R&eacute;partition
+    </ion-segment-button>
+    <ion-segment-button value="progression">
+      Progression
+    </ion-segment-button>
+  </ion-segment>
+  
+  <!-- Statistiques de répartition -->
+  <ng-container [ngSwitch]="statType">
+    <div *ngSwitchCase="'division'" [chart]="divisionChart"></div>
+    <div *ngSwitchCase="'progression'" [chart]="progressionChart"></div>
+  </ng-container>
+</ion-content>

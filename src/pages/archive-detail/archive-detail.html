@@ -1,0 +1,87 @@
+<!--
+  Generated template for the ArchiveDetailPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <page-top-header [subtitle]="title"></page-top-header>
+</ion-header>
+
+<ion-content padding>
+  <ng-container *ngIf="loaded">
+    <ion-list>
+      <form [formGroup]="archiveForm">
+        <!-- Vision admin -->
+        <ng-container *ngIf="backend.isAdminConnected(); else noadmin">
+          <!-- Année -->
+          <ion-item>
+            <ion-label floating color="primary">Ann&eacute;e</ion-label>
+            <ion-input type="number" formControlName="year" [(ngModel)]="archive.year"></ion-input >
+          </ion-item>
+          <div class="valid-error" *ngIf="!archiveForm.controls.year.valid && (archiveForm.controls.year.dirty || submitAttempt)">
+            <p *ngIf="archiveForm.controls.year.errors.required">Veuillez saisir l'année.</p>
+          </div>
+          <!-- Liste des catégories -->
+          <ion-item>
+            <ion-label floating color="primary">Liste des cat&eacute;gories</ion-label>
+            <ion-select multiple="true" cancelText="Annuler" okText="OK" formControlName="categoriesIds" [(ngModel)]="archive.categoriesIds" (ionChange)="updateCategories()">
+              <ion-option *ngFor="let category of categories" [value]="category.id">{{category.name}}</ion-option>
+            </ion-select>
+          </ion-item>
+        </ng-container>
+        <!-- Vision pas admin -->
+        <ng-template #noadmin>
+          <ion-item>
+            <ion-label floating color="primary">Ann&eacute;e</ion-label>
+            <ion-input disabled="true" type="number" [(ngModel)]="archive.year" [ngModelOptions]="{ standalone: true }"></ion-input >
+          </ion-item>
+        </ng-template>
+      
+        <!-- Parcours des catégories -->
+        <ion-item *ngFor="let categoryId of archive.categoriesIds">
+          <ion-label floating color="primary">Vainqueurs de la cat&eacute;gorie {{util.getCategoryNameFromList(categoryId, categories)}}</ion-label>
+          <ion-select multiple="true" cancelText="Annuler" okText="OK" [(ngModel)]="getAwardByCategory(categoryId).usersIds" [ngModelOptions]="{ standalone: true }" (ionChange)="updateNbAwardsByUser()">
+            <ion-option *ngFor="let user of users" [value]="user.id">{{util.getDisplayName(user)}}</ion-option>
+          </ion-select>
+          <ion-textarea placeholder="Raison" [(ngModel)]="getAwardByCategory(categoryId).reason" [ngModelOptions]="{ standalone: true }" style="font-size: 1.4rem"></ion-textarea>
+        </ion-item>
+        <!-- Lose award -->
+        <ion-item>
+          <ion-label floating color="primary">Losers de l'ann&eacute;e</ion-label>
+          <ion-select multiple="true" cancelText="Annuler" okText="OK" formControlName="losersIds" [(ngModel)]="loseAward.usersIds" (ionChange)="updateRanking()">
+            <ion-option *ngFor="let user of users" [value]="user.id">
+              <!-- Thierry (2 récompenses) -->
+              {{util.getDisplayName(user)}} ({{util.getPlural(nbAwardsByUser[user.id], "r&eacute;compense")}})
+            </ion-option>
+          </ion-select>
+        </ion-item>
+      </form>
+    </ion-list>
+    
+    <!-- Classement -->
+    <ul *ngIf="archive.ranking != null">
+      <ng-container *ngFor="let rank of getRankingKeys()">
+        <li *ngIf="rank != 1">
+          <!-- Deuxième position : Thierry et Sophie (2 récompenses) -->
+          {{util.getOrdinal(rank)}} :
+          {{util.getUsersNamesFromList(archive.ranking[rank], users)}}
+          ({{util.getPlural(nbAwardsByUser[archive.ranking[rank][0]], "r&eacute;compense")}})
+        </li>
+      </ng-container>
+    </ul>
+    
+    <!-- Rapport -->
+    <ion-list>
+        <ion-item>
+          <ion-label floating color="primary">Rapport</ion-label>
+          <ion-textarea [(ngModel)]="awardsAndReport.archiveReport.report" class="report" (ionChange)="setDirty()"></ion-textarea>
+        </ion-item>
+    </ion-list>
+
+    <div padding>
+      <button [disabled]="!archiveForm.valid" ion-button color="primary" (click)="save()">Valider</button>
+      <button ion-button color="primary" (click)="cancel()">Annuler</button>
+    </div>
+  </ng-container>
+</ion-content>

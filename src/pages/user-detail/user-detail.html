@@ -1,0 +1,91 @@
+<!--
+  Generated template for the UserDetailPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-toolbar>
+    <ion-title>
+      <span [innerHTML]="title"></span>
+    </ion-title>
+    <ion-buttons start>
+      <!--
+      <div ion-button (click)="goToStats()" title="Statistiques">
+        <ion-icon name="stats"></ion-icon>
+      </div>
+      -->
+      <button ion-button (click)="dismiss()" title="Fermer">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content padding>
+  <!-- Avatar -->
+  <div class="avatar-button">
+    <!-- Bouton de suppression -->
+    <button ion-button icon-only clear color="danger" class="icon-button" (click)="deleteAvatar()" title="Supprimer l'avatar">
+      <ion-icon name="trash" style="padding: 0 2px !important"></ion-icon>
+    </button>
+    
+    <!-- Image -->
+    <label for="avatar" class="label-file">
+      <!-- Cas où l'utilisateur vient de sélectionner une image : on l'affiche -->
+      <img *ngIf="newImage; else no_new" class="new-img" [src]="newImage" alt="Avatar" />
+    
+      <!-- Sinon on affiche l'avatar -->
+      <ng-template #no_new><page-avatar [user]="user" size="45"></page-avatar></ng-template>
+    </label>
+    
+    <input id="avatar" class="input-file" type="file" (change)="onFileChange($event)" #fileInput accept="image/*" />
+    <!-- <button type="button" class="btn btn-sm btn-default" (click)="clearFile()">clear file</button> -->
+  </div>
+  
+  <ion-list>
+    <form [formGroup]="userForm">
+      <ion-item>
+        <ion-input type="text" placeholder="Pr&eacute;nom" formControlName="firstName" [(ngModel)]="user.firstName"></ion-input>
+      </ion-item>
+      <div class="valid-error" *ngIf="!userForm.controls.firstName.valid && (userForm.controls.firstName.dirty || submitAttempt)">
+        <p *ngIf="userForm.controls.firstName.errors.required">Veuillez saisir le pr&eacute;nom.</p>
+      </div>
+      
+      <ion-item>
+        <ion-input type="text" placeholder="Nom" formControlName="lastName" [(ngModel)]="user.lastName"></ion-input>
+      </ion-item>
+      
+      <ion-item>
+        <ion-input type="text" placeholder="E-mail" formControlName="email" [(ngModel)]="user.email"></ion-input>
+      </ion-item>
+    </form>
+  </ion-list>
+    
+  <div padding>
+    <button [disabled]="!userForm.valid" ion-button color="primary" block (click)="save()">Valider</button>
+  </div>
+  
+  <ion-grid *ngIf="nominations" class="nominations-table">
+    <!-- Entête -->
+    <ion-row class="header">
+      <ion-col class="col-nominees">
+        Cat&eacute;gorie
+      </ion-col>
+      <ion-col class="col-reason">
+        Nomination
+      </ion-col>
+    </ion-row>
+    <ion-row *ngFor="let nomination of nominations" class="line">
+      <!-- Catégorie -->
+      <ion-col class="col-nominees">
+        {{util.getCategoryName(nomination.categoryId)}}
+      </ion-col>
+      <!-- Nomination -->
+      <ion-col class="col-reason">
+        {{nomination.reason}}
+      </ion-col>
+    </ion-row>
+  </ion-grid>

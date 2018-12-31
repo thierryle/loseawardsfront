@@ -1,0 +1,33 @@
+page-vote {
+    .label-md {
+        margin: 3px 8px 3px 0;
+    }
+    
+    .item-md {
+        padding-left: 0;
+    }
+    
+    .item-md.item-block .item-inner {
+        padding-right: 0;
+    }
+    
+    .vote-radio-group {
+        display: inline-flex;
+        flex-direction: column;
+    }
+
+    .vote-radio-button {
+        margin: 5px;
+    }
+
+    .vote-selected-value {
+        margin: 15px 0;
+    }
+    
+    .next {
+        font-size: .9em;
+        font-style: italic;
+        margin-left: 9px;
+        cursor: pointer;
+    }
+}

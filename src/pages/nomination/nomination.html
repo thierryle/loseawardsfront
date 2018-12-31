@@ -1,0 +1,168 @@
+<!--
+  Generated template for the NominationPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <page-top-header subtitle="Nominations"></page-top-header>
+  <!--
+  <ion-toolbar class="subheader">
+    <ion-title>Nominations</ion-title>
+  </ion-toolbar>
+  -->
+</ion-header>
+
+
+<ion-content padding>
+  <vertical-split-pane primary-component-minsize="150" secondary-component-minsize="100" [secondary-component-toggled-off]="false"
+    primary-component-initialratio="0.75">
+    
+    <!-- Liste des catégories -->
+    <div class="split-pane-content-primary">      
+      <ion-list no-lines *ngIf="bundle">
+        <ion-item *ngFor="let category of backend.getCachedCategories()" text-wrap>
+          <!-- Titre du bloc (nom de la catégorie) avec les boutons -->
+          <ion-toolbar (click)="toggleCategory(category.id)" class="category-toolbar">
+            <h2>
+              <ion-icon color="success" item-right [name]="isCategoryShown(category.id) ? 'arrow-dropdown' : 'arrow-dropright'" class="chevron"></ion-icon>
+              {{category.name}}
+            </h2>
+            <ion-buttons end>
+              <!--
+              <button ion-button icon-only color="danger" class="icon-button" (click)="addNomination($event, category)" title="Ajouter une nomination">
+                <ion-icon name="add-circle"></ion-icon>
+              </button>
+              -->
+              <button ion-button icon-only color="danger" class="icon-button" (click)="editCategory($event, category)" title="Modifier la cat&eacute;gorie">
+                <ion-icon name="create"></ion-icon>
+              </button>
+              <button ion-button icon-only item-end color="danger" class="icon-button" (click)="deleteCategory($event, category)" title="Supprimer la cat&eacute;gorie">
+                <ion-icon name="trash"></ion-icon>
+              </button>
+            </ion-buttons>
+          </ion-toolbar>
+          
+          <!-- Bloc refermable (nominations de la catégorie) -->
+          <div [@expand]="isCategoryShown(category.id)">
+            <ng-container *ngIf="bundle.nominations[category.id] != null && bundle.nominations[category.id].length > 0; else empty_content" style="margin-left: 3px;">
+              <ion-grid class="nominations-table">
+                <!-- Entête -->
+                <ion-row class="header">
+                  <ion-col class="col-nominees">
+                    Nomin&eacute;s
+                  </ion-col>
+                  <ion-col class="col-reason">
+                    Raison
+                  </ion-col>
+                  <!--<ion-col style="max-width: 47px; text-align: center;">-->
+                  <ion-col class="col-action">
+                    <button ion-button icon-only clear color="danger" style="margin-left: 32px !important;" class="icon-button inline-icon-button" (click)="addNomination(null, category)" title="Ajouter une nomination">
+                      <ion-icon name="add-circle"></ion-icon>
+                    </button>
+                  </ion-col>
+                </ion-row>
+                <ion-row *ngFor="let nomination of bundle.nominations[category.id]" class="line" (click)="editNomination(nomination)">
+                  <!-- Nominées -->
+                  <ion-col class="col-nominees">
+                    {{util.getUsersNames(nomination.usersIds)}}
+                  </ion-col>
+                  <!-- Raison -->
+                  <ion-col class="col-reason">
+                    {{nomination.reason}}
+                  </ion-col>
+                  <!-- Boutons -->
+                  <ion-col class="col-action">
+                    <button ion-button icon-only clear item-end color="danger" class="icon-button inline-icon-button" (click)="addComment($event, nomination)" title="Commenter la nomination">
+                      <ion-icon name="text"></ion-icon>
+                    </button>
+                    <button ion-button icon-only clear item-end color="danger" class="icon-button inline-icon-button" (click)="deleteNomination($event, nomination)" title="Supprimer la nomination">
+                      <ion-icon name="trash"></ion-icon>
+                    </button>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ng-container>
+
+            <!-- Cas où la liste est vide -->
+            <ng-template #empty_content>
+              <ion-grid class="nominations-table">
+                <ion-row class="header">
+                  <ion-col>
+                    Aucune nomination
+                  </ion-col>
+                  <ion-col style="max-width: 47px; text-align: center;">
+                    <button ion-button icon-only clear color="danger" class="icon-button inline-icon-button" (click)="addNomination(null, category)" title="Ajouter une nomination">
+                      <ion-icon name="add-circle"></ion-icon>
+                    </button>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ng-template>
+          </div>
+          
+        </ion-item>
+      </ion-list>
+    </div>
+ 
+    <!-- Commentaires -->
+    <div class="split-pane-content-secondary">
+      <ng-container *ngIf="commentsByNominations">
+        <!-- Parcours des nominations possédant des commentaires -->
+        <ion-card *ngFor="let commentedNominationId of getCommentedNominationsIds()">
+          <!-- Description de la nomination -->          
+          <ion-card-header *ngIf="nominationsMap[commentedNominationId]; else no_nomination" class="comment-header">
+            <ion-grid class="nomination-description">
+              <ion-row>
+                <ion-col>
+                  {{util.getUsersNames(nominationsMap[commentedNominationId].usersIds)}} : {{nominationsMap[commentedNominationId].reason}}
+                </ion-col>
+                <ion-col class="col-action">
+                  <button ion-button item-end icon-only clear (click)="addComment(null, nominationsMap[commentedNominationId])" color="danger" class="icon-button inline-icon-button" title="Commenter la nomination">
+                    <ion-icon name="text"></ion-icon>
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-header>
+          <ng-template #no_nomination>Nomination inexistante {{commentedNominationId}}</ng-template>
+            
+          <!-- Liste des commentaires -->
+          <ion-card-content class="comment-content">
+            <div class="message-wrap">
+              <div *ngFor="let comment of commentsByNominations[commentedNominationId]" class="message" [ngClass]="{ left: !isIdentifiedUserComment(comment), right: isIdentifiedUserComment(comment) }">
+                <page-avatar [userId]="comment.authorId" size="32"></page-avatar>
+                <div class="msg-detail">
+                  <!-- Contenu de la bulle -->
+                  <div class="msg-content" (click)="editComment(comment)">
+                    <!--<span class="triangle"></span>-->
+                    <p class="line-breaker">{{comment.content}}</p>
+                  </div>
+                  <!-- Infos sous la bulle -->
+                  <div class="msg-info">
+                    <p>
+                      {{util.getUserName(comment.authorId)}} - {{comment.date.substring(0, 10)}} -
+                      <ion-icon name="trash" class="comment-edit" (click)="deleteComment(comment)" title="Supprimer le commentaire"></ion-icon>
+                    </p>                       
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ion-card-content>             
+        </ion-card>
+      </ng-container>
+    </div>
+  </vertical-split-pane>
+  
+  <!-- Bouton d'ajout -->'
+  <ion-fab right bottom>
+    <button ion-fab color="danger"><ion-icon name="arrow-dropup"></ion-icon></button>
+    <ion-fab-list side="top">
+      <button ion-fab (click)="addCategory()" title="Ajouter une cat&eacute;gorie"><ion-icon name="folder"></ion-icon></button>
+      <button ion-fab (click)="goToImage()" title="Voir toutes les images"> <ion-icon name="images"></ion-icon></button>
+      <button ion-fab (click)="sendNominationsByMail()" title="Envoyer les nominations par mail"><ion-icon name="mail"></ion-icon></button>
+    </ion-fab-list>
+    <!--<button ion-fab color="danger" (click)="addCategory()" title="Ajouter une cat&eacute;gorie"><ion-icon name="add"></ion-icon></button>-->
+  </ion-fab>
+</ion-content>

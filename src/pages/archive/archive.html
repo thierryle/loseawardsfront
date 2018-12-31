@@ -1,0 +1,138 @@
+<!--
+  Generated template for the ArchivePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <page-top-header subtitle="Archives"></page-top-header>
+</ion-header>
+
+<ion-content padding>
+  <ion-grid *ngIf="bundle">
+    <ion-row>
+      <ion-col col-4>
+        <!-- Archive -->
+        <ion-card>
+          <ion-card-header style="padding: 0 !important;">
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                  Archives
+                </ion-col>
+                <ion-col *ngIf="backend.isAdminConnected()" style="max-width: 36px;">
+                  <button ion-button icon-only clear color="danger" class="icon-button inline-icon-button" (click)="addArchive()" title="Ajouter une archive">
+                    <ion-icon name="add-circle"></ion-icon>
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-header>
+          <ion-list>
+            <button ion-item *ngFor="let archive of bundle.archives" (click)="editArchive(archive)">
+              {{archive.year}} ({{getLosersByYear(archive.year)}})
+              <button *ngIf="backend.isAdminConnected()" ion-button icon-only clear item-end color="danger" class="icon-button" (click)="deleteArchive($event, archive)" title="Supprimer l'archive'">
+                <ion-icon name="trash"></ion-icon>
+              </button>
+            </button>
+          </ion-list>
+        </ion-card>
+      </ion-col>
+      <ion-col col-4>
+        <!-- Catégories -->
+        <ion-card>
+          <ion-card-header style="padding: 0 !important;">
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                  Statistiques par cat&eacute;gorie
+                </ion-col>
+                <ion-col *ngIf="backend.isAdminConnected()" style="max-width: 36px;">
+                  <button ion-button icon-only clear color="danger" class="icon-button inline-icon-button" (click)="addCategory()" title="Ajouter une cat&eacute;gorie">
+                    <ion-icon name="add-circle"></ion-icon>
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-header>
+          <ion-list>
+            <!-- Records -->
+            <button ion-item (click)="statRecords()">
+              <b>Records par cat&eacute;gorie</b>
+            </button>
+            <!-- Vision admin -->
+            <ng-container *ngIf="backend.isAdminConnected(); else category_noadmin">
+              <!-- Grand champion -->
+              <button ion-item>
+                <b>Grand Champion</b>
+                <button ion-button icon-only clear item-end color="danger" class="icon-button" (click)="statCategoryGrandChampion()" title="Statistiques Grand Champion">
+                  <ion-icon name="stats"></ion-icon>
+                </button>
+              </button>
+              <!-- Autres catégories -->
+              <button ion-item *ngFor="let category of bundle.archiveCategories" (click)="editCategory(category)">
+                {{category.name}}
+                <button ion-button icon-only clear item-end color="danger" class="icon-button" (click)="statCategory($event, category)" title="Statistiques de la cat&eacute;gorie">
+                  <ion-icon name="stats"></ion-icon>
+                </button>
+                <button ion-button icon-only clear item-end color="danger" class="icon-button" (click)="deleteCategory($event, category)" title="Supprimer la cat&eacute;gorie">
+                  <ion-icon name="trash"></ion-icon>
+                </button>
+              </button>
+            </ng-container>
+            <!-- Vision pas admin -->
+            <ng-template #category_noadmin>
+              <!-- Grand champion -->
+              <button ion-item (click)="statCategoryGrandChampion()">
+                <b>Grand Champion</b>
+              </button>
+              <!-- Autres catégories -->
+              <button ion-item *ngFor="let category of bundle.archiveCategories" (click)="statCategory(null, category)">
+                {{category.name}}
+              </button>
+            </ng-template>
+          </ion-list>
+        </ion-card>
+      </ion-col>
+      <ion-col col-4>
+        <!-- Compétiteurs -->
+        <ion-card>
+          <ion-card-header style="padding: 0 !important;">
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                  Statistiques par comp&eacute;titeur
+                </ion-col>
+                <ion-col *ngIf="backend.isAdminConnected()" style="max-width: 36px;">
+                  <button ion-button icon-only clear color="danger" class="icon-button inline-icon-button" (click)="addUser()" title="Ajouter un comp&eacute;titeur">
+                    <ion-icon name="add-circle"></ion-icon>
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-header>
+          <ion-list>
+            <!-- Vision admin -->
+            <ng-container *ngIf="backend.isAdminConnected(); else user_noadmin">
+              <button ion-item *ngFor="let user of bundle.archiveUsers" (click)="editUser(user)">
+                {{user.firstName}} {{user.lastName}}
+                <button ion-button icon-only clear item-end color="danger" class="icon-button" (click)="statUser($event, user)" title="Statistiques du comp&eacute;titeur">
+                  <ion-icon name="stats"></ion-icon>
+                </button>
+                <button ion-button icon-only clear item-end color="danger" class="icon-button" (click)="deleteUser($event, user)" title="Supprimer le comp&eacute;titeur">
+                  <ion-icon name="trash"></ion-icon>
+                </button>
+              </button>
+            </ng-container>
+            <!-- Vision pas admin -->
+            <ng-template #user_noadmin>
+              <button ion-item *ngFor="let user of bundle.archiveUsers" (click)="statUser(null, user)">
+                {{user.firstName}} {{user.lastName}}
+              </button>
+            </ng-template>
+          </ion-list>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

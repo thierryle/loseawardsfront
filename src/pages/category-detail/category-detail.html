@@ -1,0 +1,37 @@
+<!--
+  Generated template for the CategoryDetailPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-toolbar>
+    <ion-title>
+      <span [innerHTML]="title"></span>
+    </ion-title>
+    <ion-buttons start>
+      <button ion-button (click)="dismiss()">
+        <ion-icon name="md-close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <form [formGroup]="categoryForm">
+      <ion-item>
+        <ion-input type="text" placeholder="Nom" formControlName="name" [(ngModel)]="category.name"></ion-input>
+      </ion-item>
+      <div class="valid-error" *ngIf="!categoryForm.controls.name.valid  && (categoryForm.controls.name.dirty || submitAttempt)">
+        <p *ngIf="categoryForm.controls.name.errors.required">Veuillez saisir le nom.</p>
+      </div>
+    </form>
+  </ion-list>
+    
+  <div padding>
+    <button [disabled]="!categoryForm.valid" ion-button color="primary" block (click)="save()">Valider</button>
+  </div>
+</ion-content>

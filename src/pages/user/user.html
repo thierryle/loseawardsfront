@@ -1,0 +1,60 @@
+<!--
+  Generated template for the UserPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <page-top-header subtitle="Comp&eacute;titeurs"></page-top-header>
+  <!--
+  <ion-toolbar class="subheader">
+    <ion-title>Comp&eacute;titeurs</ion-title>
+  </ion-toolbar>
+  -->
+
+</ion-header>
+
+
+<ion-content padding>
+  <!-- Liste des utilisateurs -->
+  <ion-list *ngIf="bundle">
+    <!--
+    <ion-item *ngFor="let user of users" (click)="editUser(user)">
+      <ion-avatar item-start>
+        <img alt="Avatar" [src]="backend.getAvatarURL(5928566696968192)" />
+      </ion-avatar>
+      <h2>{{user.firstName}} {{user.lastName}}</h2>
+      <ion-note class="col-email">{{user.email}}</ion-note>
+      <button ion-button icon-only clear item-end color="danger" class="icon-button" (click)="deleteUser($event, user)" title="Supprimer le comp&eacute;titeur">
+        <ion-icon name="trash"></ion-icon>
+      </button>
+    </ion-item>
+    -->
+    
+    <button ion-item *ngFor="let user of backend.getCachedUsers()" (click)="editUser(user)">
+      <!-- Avatar -->
+      <ion-avatar item-start>
+        <page-avatar [user]="user" size="45"></page-avatar>
+      </ion-avatar>
+      
+      {{user.firstName}} {{user.lastName}}
+      <ion-note class="col-email">{{user.email}}</ion-note>
+      <ion-note class="col-nominations" [ngSwitch]="getNumberOfNominations(user)">
+        <span *ngSwitchCase="0">Aucune nomination</span>
+        <span *ngSwitchCase="1">1 nomination</span>
+        <span *ngSwitchDefault>{{getNumberOfNominations(user)}} nominations</span>
+      </ion-note>
+            
+      <button ion-button icon-only clear item-end color="danger" class="icon-button" (click)="deleteUser($event, user)" title="Supprimer le comp&eacute;titeur">
+        <ion-icon name="trash"></ion-icon>
+      </button>
+    </button>
+    
+  </ion-list>
+  
+  <!-- Bouton d'ajout -->'
+  <ion-fab right bottom>
+    <button ion-fab color="danger" (click)="addUser()"><ion-icon name="add"></ion-icon></button>
+  </ion-fab>
+</ion-content>

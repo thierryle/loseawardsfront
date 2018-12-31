@@ -1,0 +1,202 @@
+page-nomination {
+    .label-md {
+        margin: 3px 8px 3px 0;
+    }
+    
+    .item-md {
+        padding-left: 0;
+    }
+    
+    .item-md.item-block .item-inner {
+        padding-right: 0;
+    }
+    
+    // Barre de séparation
+    [_nghost-c2] {
+        border-left: none !important;
+    }
+    
+    // ===== Commentaires =====
+    
+    .card-md {
+        margin: 5px 0px 10px 9px;
+    }    
+    
+    .nomination-description {
+        padding: 0;
+        margin: 0;
+        
+        .col {
+            padding: 0;
+            margin: 0;
+        }
+
+        .row {
+            padding: 0;
+            margin: 0;
+        }
+
+        .col-action {
+            max-width: 28px;
+            text-align: center;
+        }
+    }
+    
+    .comment-header {
+        /*background: #f8f8f8;
+        border-bottom: 1px solid #EFEFEF;*/
+        padding: 8px;
+        white-space: inherit;
+        font-size: 13px;
+        line-height: 1.6rem;
+    }
+    
+    .comment-content {
+        padding: 0;
+    }
+    
+    .comment-edit {
+        opacity: 0.2;
+        filter: alpha(opacity=20);
+        cursor: pointer;
+        position: relative;
+        top: 1px;
+    }
+    
+    .comment-edit:hover {
+        opacity: 1;
+        filter: alpha(opacity=100);
+    }
+    
+    //$userBackgroundColor: #387ef5;
+    $userBackgroundColor: #488AFF;
+    $toUserBackgroundColor: #fff;
+  
+    .line-breaker {
+        white-space: pre-line;
+    }
+  
+    .message-wrap {
+        padding: 5px 10px 0 10px;
+        
+        .message {
+            position: relative;
+            padding: 0 0 0 0;
+
+            .msg-detail {
+                width: 100%;
+                display: inline-block;
+                
+                p {
+                    margin: 0;
+                }
+                
+                .msg-info {
+                    //float: left;
+                    margin: 0 6px 6px 8px;
+                    clear: both;
+                    
+                    p {
+                        font-size: .8em;
+                        color: #888;
+                    }
+                }
+
+                .msg-content {
+                    position: relative;
+                    //margin-top: 5px;
+                    border-radius: 15px;
+                    padding: 5px 10px;
+                    //border: 1px solid #ddd;
+                    //color: #fff;
+                    width: auto;
+                    cursor: pointer;
+                    //max-width: 80%;
+                    p {
+                        font-size: 13px !important;
+                        line-height: 1.6rem;
+                    }                   
+                    /*
+                    span.triangle {
+                        background-color: #fff;
+                        border-radius: 2px;
+                        height: 8px;
+                        width: 8px;
+                        top: 12px;
+                        display: block;
+                        border-style: solid;
+                        border-color: #ddd;
+                        border-width: 1px;
+                        -webkit-transform: rotate(45deg);
+                        transform: rotate(45deg);
+                        position: absolute;
+                    }
+                    */
+                }
+            }
+        }
+
+        .message.left {
+            .msg-content {
+                border: 1px solid #ddd;
+                background-color: $toUserBackgroundColor;
+                float: left;
+                
+                p {
+                    color: #343434;
+                }
+            }
+            
+            .msg-detail {
+                padding-left: 40px;
+            }
+            
+            .user-img {
+                left: 0;
+            }
+            /*            
+            .msg-content {
+                color: #343434;
+                span.triangle {
+                    border-top-width: 0;
+                    border-right-width: 0;
+                    left: -5px;
+                }
+            }
+            */
+        }
+
+        .message.right {
+            .msg-detail {
+                padding-right: 40px;
+                
+                .msg-info {
+                    text-align: right;
+                }
+            }
+            
+            .user-img {
+                right: 0;
+            }
+            
+            .msg-content {
+                border: 1px solid $userBackgroundColor;
+                background-color: $userBackgroundColor;
+                float: right;
+                
+                p {
+                    color: #ffffff;
+                }
+                
+                /*
+                span.triangle {
+                    background-color: $userBackgroundColor;
+                    border-bottom-width: 0;
+                    border-left-width: 0;
+                    right: -5px;
+                }
+                */
+            }
+        }
+    }
+}

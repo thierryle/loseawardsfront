@@ -1,0 +1,21 @@
+<!--
+  Generated template for the AvatarPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+
+<!--
+<img #avatar_img class="user-img" *ngIf="user.avatarId; else no_avatar" alt="Avatar" [src]="getAvatarURL()" [style.height]="size" [style.width]="size" />
+<ng-template #no_avatar><img #no_avatar_img class="user-img" alt="Avatar" src="assets/imgs/default-avatar.jpg" [style.height]="size" [style.width]="size" /></ng-template>
+-->
+
+<!--<ion-icon name="contact" style="font-size: 46px;"></ion-icon>-->
+<!--<div class="letter">{{user.firstName.substring(0,1)}}</div>-->
+
+<div style="display: inline !important;">
+  <img class="user-img" *ngIf="(user && user.avatarId); else no_avatar" alt="Avatar" [src]="getAvatarURL()" [ngStyle]="{ 'height' : size + 'px', 'width' : size + 'px'}"/>
+  <ng-template #no_avatar>
+    <ion-icon name="contact" [ngStyle]="{ 'font-size' : getFontSize() + 'px', 'line-height' : size + 'px' }" class="user-icon"></ion-icon>
+  </ng-template>
+</div>

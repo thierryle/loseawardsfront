@@ -1,0 +1,133 @@
+// http://ionicframework.com/docs/theming/
+
+
+// App Global Sass
+// --------------------------------------------------
+// Put style rules here that you want to apply globally. These
+// styles are for the entire app and not just one component.
+// Additionally, this file can be also used as an entry point
+// to import other Sass files to be included in the output CSS.
+//
+// Shared Sass variables, which can be used to adjust Ionic's
+// default Sass variables, belong in "theme/variables.scss".
+//
+// To declare rules for a specific mode, create a child rule
+// for the .md, .ios, or .wp mode classes. The mode class is
+// automatically applied to the <body> element in the app.
+
+.valid-error {
+    padding-left: 16px;
+    color: red;
+}
+
+.icon-button {
+    opacity: 0.2;
+    filter: alpha(opacity=20);
+}
+    
+.icon-button:hover {
+    opacity: 1;
+    filter: alpha(opacity=100);
+}
+
+// Sous-titre
+.subheader {
+    min-height: inherit !important;
+    max-height: 30px;
+}
+
+.subheader .toolbar-title-md {
+    padding: 0 12px 15px 12px;
+    font-size: 1.6rem;
+    font-weight: normal;
+//    color: #424242;
+}
+
+// Tableau des nominations
+.nominations-table {
+    .header .col {
+        background-color: #f8f8f8;
+    }
+    
+    .line {
+        cursor: pointer;
+    }
+
+    .col {
+        border: solid 1px #EFEFEF;
+        border-bottom-style: none;
+        border-right-style: none;
+    }
+
+    .col:last-child {
+        border-right: solid 1px #EFEFEF;
+        border-left-style: none;
+    }
+
+    .row:last-child .col {
+        border-bottom: solid 1px #EFEFEF;
+    }
+    
+    .col-nominees {
+    }
+    
+    .col-reason {
+        min-width: 65%;
+    }
+    
+    .col-action {
+        max-width: 80px;
+        text-align: center;
+    }
+}
+
+// Chargement de fichier
+.label-file {
+    cursor: pointer;
+}
+
+.label-file:hover {
+}
+
+.input-file {
+    display: none;
+}
+
+ion-card-header {
+    background: #f8f8f8;
+    border-bottom: 1px solid #EFEFEF;
+}
+
+.chevron {
+    margin-left: 10px !important;
+    position: relative;
+    top: 2px;
+    font-size: 20px;
+    color: darkgrey;
+}
+
+// Barre de catégorie
+.category-toolbar {
+    box-shadow: 0 8px 5px -6px lightgrey;
+    margin: 3px;
+    min-height: inherit !important;
+    max-height: 52px;        
+}
+
+// Boutons dans un tableau
+.inline-icon-button {
+    margin: 0px !important;
+    padding: 0px !important;
+    height: inherit !important;
+    contain: inherit !important;
+    overflow:inherit !important;
+    vertical-align: middle !important;
+    max-width: 30px !important;
+}
+
+body {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
