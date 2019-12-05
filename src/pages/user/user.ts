@@ -34,6 +34,9 @@ export class UserPage {
     this.backend.getUserBundle().subscribe(
       data => {
         this.bundle = data;
+        if (this.bundle.nominations == null) {
+          this.bundle.nominations = {};
+        }
         loading.dismiss();
       },
       error => {

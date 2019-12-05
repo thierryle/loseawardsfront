@@ -40,6 +40,14 @@ export class AvatarPage {
     return this.backend.getAvatarURL(this.user.avatarId);
   }
   
+  // getAvatarData() {
+  //   return this.backend.getAvatar(this.user.avatarId).subscribe(
+  //     data => {
+  //     },
+  //     error => {
+  //     });;
+  // }
+  
   getFontSize() {
     let val = Math.round(parseFloat(this.size) * 1.22);
     return val;

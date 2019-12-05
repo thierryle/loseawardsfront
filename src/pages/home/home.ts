@@ -42,9 +42,24 @@ export class HomePage {
         this.bundle = data;
         
         // Mise à jour du cache
-        this.backend.setCachedUsers(this.bundle.users);
-        this.backend.setCachedCategories(this.bundle.categories);
-        this.backend.setCachedGlobals(this.bundle.globals);
+        if (this.bundle.users != null) {
+          this.backend.setCachedUsers(this.bundle.users);
+        } else {
+          this.backend.setCachedUsers([]);
+        }
+        
+        if (this.bundle.categories != null) {
+          this.backend.setCachedCategories(this.bundle.categories);
+        } else {
+          this.backend.setCachedCategories([]);
+        }
+        
+        if (this.bundle.globals != null) {
+          this.backend.setCachedGlobals(this.bundle.globals);
+        } else {
+          this.backend.setCachedGlobals([]);
+        }
+        
         this.initGlobals();
         this.news = this.util.getNews();
         loading.dismiss();
@@ -71,7 +86,10 @@ export class HomePage {
   }
   
   getUsersIds() {
-    return Object.keys(this.bundle.statistiques);
+    if (this.bundle.statistiques != null) {
+      return Object.keys(this.bundle.statistiques);
+    }
+    return null;
   }
   
   save() {
@@ -93,7 +111,7 @@ export class HomePage {
     }
     
     if (changedGlobals.length > 0) {
-      this.backend.updateGlobals(changedGlobals).subscribe(
+      this.backend.updateGlobals({ globals: changedGlobals }).subscribe(
         () => {
           this.util.toast('Sauvegarde effectuée');
         },

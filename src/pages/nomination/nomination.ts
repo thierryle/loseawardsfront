@@ -60,14 +60,19 @@ export class NominationPage {
         this.bundle = data;
         
         // Création de la map des nominations par ID pour accéder facilement aux nominations
-        for (let categoryId of Object.keys(this.bundle.nominations)) {
-          for (let nomination of this.bundle.nominations[categoryId]) {
-            this.nominationsMap[nomination.id] = nomination;
+        if (this.bundle.nominations != null) {
+          for (let categoryId of Object.keys(this.bundle.nominations)) {
+            for (let nomination of this.bundle.nominations[categoryId]) {
+              this.nominationsMap[nomination.id] = nomination;
+            }
           }
+          
+          // Récupération des commentaires
+          this.getCommentsByNominations();
+        } else {
+          this.bundle.nominations = {};
         }
         
-        // Récupération des commentaires
-        this.getCommentsByNominations();
         loading.dismiss();
       },
       error => {
@@ -282,7 +287,13 @@ export class NominationPage {
   getCommentsByNominations() {
     this.backend.getCommentsByNominations().subscribe(
       data => {
-        this.commentsByNominations = data;
+        let bundle: any = data;
+        if (bundle.comments != null) {
+          this.commentsByNominations = bundle.comments;
+        } else {
+          this.commentsByNominations = {};
+        }
+        
       },
       error => {
         this.util.handleError(error);

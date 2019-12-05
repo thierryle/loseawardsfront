@@ -35,11 +35,11 @@
               </ng-container>
             </ng-container>
             <!-- Les deuxièmes -->
-            <ng-container *ngIf="result.secondsByCategory[category.id] != null">
+            <ng-container *ngIf="result.secondsByCategory != null && result.secondsByCategory[category.id] != null">
               (suivi par {{util.getUsersNames(result.secondsByCategory[category.id])}})
             </ng-container>        
             <!-- Décision du président -->
-            <div *ngIf="result.decisionsByCategory[category.id] != null">
+            <div *ngIf="result.decisionsByCategory != null && result.decisionsByCategory[category.id] != null">
               <b>D&eacute;cision du pr&eacute;sident :</b>
               <ng-container [ngSwitch]="result.decisionsByCategory[category.id]">
                 <ng-container *ngSwitchCase="-2">Tous</ng-container>

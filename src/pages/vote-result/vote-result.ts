@@ -52,7 +52,7 @@ export class VoteResultPage {
               this.categoriesToSettle.push(category.id);
               
               // S'il n'y a pas eu de décision, il faut l'afficher
-              if (this.result.decisionsByCategory[category.id] == null) {
+              if (this.result.decisionsByCategory == null || this.result.decisionsByCategory[category.id] == null) {
                 this.categoriesNotSettled.push(category.id);
               }
             }

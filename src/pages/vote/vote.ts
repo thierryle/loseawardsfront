@@ -68,7 +68,8 @@ export class VotePage {
         
         this.backend.getVotesByUser(this.backend.getIdentifiedUser().id).subscribe(
           data2 => {
-            this.votesOfUser = data2;
+            this.votesOfUser = data2['votes'];
+            console.log('votes : ' + JSON.stringify(this.votesOfUser));
             this.initVotes();
             this.loaded = true;
             loading.dismiss();

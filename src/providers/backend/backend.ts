@@ -10,7 +10,8 @@ import { Injectable } from '@angular/core';
 */
 @Injectable()
 export class BackendProvider {
-  urlBase : string = '';
+  apiUrl: string;
+  baseUrl: string = '';
   cachedUsers: any;
   cachedCategories: any;
   identifiedUser: any;
@@ -20,91 +21,92 @@ export class BackendProvider {
     console.log('HOST : ' + window.location.hostname);
     if (window.location.hostname == 'localhost') {
       // Test en local
-      this.urlBase = 'http://localhost:8888';
+      this.baseUrl = 'http://localhost:8080';
     }
+    this.apiUrl = this.baseUrl + '/_ah/api/loseawards/v1';
   }
   
   // ===== Accueil =====
   
   getHomeBundle() {
-    return this.http.get(this.urlBase + '/api/home/bundle');
+    return this.http.get(this.apiUrl + '/home/bundle');
   }
   
   reset() {
-    return this.http.delete(this.urlBase + '/api/home/reset');
+    return this.http.delete(this.apiUrl + '/home/reset');
   }
   
   clean() {
-    return this.http.get(this.urlBase + '/api/home/clean');
+    return this.http.get(this.apiUrl + '/home/clean');
   }
   
   // ===== Utilisateurs =====
 
   getUserBundle() {
-    return this.http.get(this.urlBase + '/api/users/bundle');
+    return this.http.get(this.apiUrl + '/users/bundle');
   }
   
   getUsers() {
-    return this.http.get(this.urlBase + '/api/users');
+    return this.http.get(this.apiUrl + '/users');
   }
   
   addUser(user) {
-    return this.http.post(this.urlBase + '/api/users', user);
+    return this.http.post(this.apiUrl + '/users', user);
   }
   
   updateUser(user) {
-    return this.http.put(this.urlBase + '/api/users/' + user.id, user);
+    return this.http.put(this.apiUrl + '/users/' + user.id, user);
   }
   
   deleteUser(user) {
-    return this.http.delete(this.urlBase + '/api/users/' + user.id);
+    return this.http.delete(this.apiUrl + '/users/' + user.id);
   }
   
   // ===== Catégories =====
   
   getCategories() {
-    return this.http.get(this.urlBase + '/api/categories');
+    return this.http.get(this.apiUrl + '/categories');
   }
   
   addCategory(category) {
-    return this.http.post(this.urlBase + '/api/categories', category);
+    return this.http.post(this.apiUrl + '/categories', category);
   }
   
   updateCategory(category) {
-    return this.http.put(this.urlBase + '/api/categories/' + category.id, category);
+    return this.http.put(this.apiUrl + '/categories/' + category.id, category);
   }
   
   deleteCategory(category) {
-    return this.http.delete(this.urlBase + '/api/categories/' + category.id);
+    return this.http.delete(this.apiUrl + '/categories/' + category.id);
   }
   
   // ===== Nominations =====
   
   getNominationBundle() {
-    return this.http.get(this.urlBase + '/api/nominations/bundle');
+    return this.http.get(this.apiUrl + '/nominations/bundle');
   }
   
   addNomination(nomination) {
-    return this.http.post(this.urlBase + '/api/nominations', nomination);
+    return this.http.post(this.apiUrl + '/nominations', nomination);
   }
   
   deleteNomination(nomination) {
-    return this.http.delete(this.urlBase + '/api/nominations/' + nomination.id);
+    return this.http.delete(this.apiUrl + '/nominations/' + nomination.id);
   }
   
   updateNomination(nomination) {
-    return this.http.put(this.urlBase + '/api/nominations/' + nomination.id, nomination);
+    return this.http.put(this.apiUrl + '/nominations/' + nomination.id, nomination);
   }
   
-  getNominationImageURL(avatarId) {
-    return this.urlBase + '/api/images/' + avatarId;
+  getNominationImageURL(imageId) {
+    return this.baseUrl + '/images/' + imageId;
   }
   
   sendNominationsByMail(address) {
     let params = new HttpParams();
     params = params.append('address', address);
     
-    return this.http.get(this.urlBase + '/api/nominations/mail', { params });
+    return this.http.get(this.apiUrl + '/nominations/mail', { params });
   }
   
   // ===== Cache et utilisateur identifié
@@ -218,70 +220,75 @@ export class BackendProvider {
   // ===== Commentaires =====
   
   getCommentsByNominations() {
-    return this.http.get(this.urlBase + '/api/comments/group');
+    return this.http.get(this.apiUrl + '/comments/group');
   }
   
   addComment(comment) {
-    return this.http.post(this.urlBase + '/api/comments', comment);
+    return this.http.post(this.apiUrl + '/comments', comment);
   }
   
   deleteComment(comment) {
-    return this.http.delete(this.urlBase + '/api/comments/' + comment.id);
+    return this.http.delete(this.apiUrl + '/comments/' + comment.id);
   }
   
   updateComment(comment) {
-    return this.http.put(this.urlBase + '/api/comments/' + comment.id, comment);
+    return this.http.put(this.apiUrl + '/comments/' + comment.id, comment);
   }
   
   // ===== Avatars =====
   
   getAvatarURL(avatarId) {
-    return this.urlBase + '/api/avatars/' + avatarId;
+    // return this.apiUrl + '/avatars/' + avatarId;
+    return this.baseUrl + '/avatars/' + avatarId;
+  }
+  
+  getAvatar(avatarId) {
+    return this.http.get(this.apiUrl + '/avatars/' + avatarId);
   }
   
   // ===== Images =====
 
   getImageBundle() {
-    return this.http.get(this.urlBase + '/api/images/bundle');
+    return this.http.get(this.apiUrl + '/images/bundle');
   }
   
   getImageURL(imageId) {
-    return this.urlBase + '/api/images/' + imageId;
+    return this.apiUrl + '/images/' + imageId;
   }
   
   // ===== Votes =====
   
   addVotes(votes) {
-    return this.http.post(this.urlBase + '/api/votes/bulk', votes);
+    return this.http.post(this.apiUrl + '/votes/bulk', { 'votes': votes });
   }
   
   getVoteResult() {
-    return this.http.get(this.urlBase + '/api/votes/result');
+    return this.http.get(this.apiUrl + '/votes/result');
   }
   
   getVotesByUser(userId) {
     let params = new HttpParams();
     params = params.append('userId', userId);
     
-    return this.http.get(this.urlBase + '/api/votes', { params });
+    return this.http.get(this.apiUrl + '/votes', { params });
   }
   
   deleteVotes() {
-    return this.http.delete(this.urlBase + '/api/votes');
+    return this.http.delete(this.apiUrl + '/votes');
   }
   
   addDecisions(decisions) {
-    return this.http.post(this.urlBase + '/api/decisions/bulk', decisions);
+    return this.http.post(this.apiUrl + '/decisions/bulk', { 'decisions': decisions });
   }
   
   // ===== Variables globales =====
   
   updateGlobal(global) {
-    return this.http.put(this.urlBase + '/api/globals/' + global.id, global);
+    return this.http.put(this.apiUrl + '/globals/' + global.id, global);
   }
   
   updateGlobals(globals) {
-    return this.http.put(this.urlBase + '/api/globals/bulk', globals);
+    return this.http.put(this.apiUrl + '/globals/bulk', globals);
   }
 
   getCachedGlobals() {
@@ -295,67 +302,67 @@ export class BackendProvider {
   // ===== Archives =====
   
   getArchiveBundle() {
-    return this.http.get(this.urlBase + '/api/archives/bundle');
+    return this.http.get(this.apiUrl + '/archives/bundle');
   }
   
   getArchiveUsers() {
-    return this.http.get(this.urlBase + '/api/archiveusers');
+    return this.http.get(this.apiUrl + '/archiveusers');
   }
   
   addArchiveUser(user) {
-    return this.http.post(this.urlBase + '/api/archiveusers', user);
+    return this.http.post(this.apiUrl + '/archiveusers', user);
   }
   
   updateArchiveUser(user) {
-    return this.http.put(this.urlBase + '/api/archiveusers/' + user.id, user);
+    return this.http.put(this.apiUrl + '/archiveusers/' + user.id, user);
   }
   
   deleteArchiveUser(user) {
-    return this.http.delete(this.urlBase + '/api/archiveusers/' + user.id);
+    return this.http.delete(this.apiUrl + '/archiveusers/' + user.id);
   }
   
   getArchiveCategories() {
-    return this.http.get(this.urlBase + '/api/archivecategories');
+    return this.http.get(this.apiUrl + '/archivecategories');
   }
   
   addArchiveCategory(category) {
-    return this.http.post(this.urlBase + '/api/archivecategories', category);
+    return this.http.post(this.apiUrl + '/archivecategories', category);
   }
   
   updateArchiveCategory(category) {
-    return this.http.put(this.urlBase + '/api/archivecategories/' + category.id, category);
+    return this.http.put(this.apiUrl + '/archivecategories/' + category.id, category);
   }
   
   deleteArchiveCategory(category) {
-    return this.http.delete(this.urlBase + '/api/archivecategories/' + category.id);
+    return this.http.delete(this.apiUrl + '/archivecategories/' + category.id);
   }
   
   addArchive(archive) {
-    return this.http.post(this.urlBase + '/api/archives', archive);
+    return this.http.post(this.apiUrl + '/archives', archive);
   }
   
   deleteArchive(archive) {
-    return this.http.delete(this.urlBase + '/api/archives/' + archive.id);
+    return this.http.delete(this.apiUrl + '/archives/' + archive.id);
   }
   
   addArchiveWithAwardsAndReport(archiveWithAwards) {
-    return this.http.post(this.urlBase + '/api/archives/awards', archiveWithAwards);
+    return this.http.post(this.apiUrl + '/archives/awards', archiveWithAwards);
   }
   
   updateArchiveWithAwardsAndReport(archiveWithAwards) {
-    return this.http.put(this.urlBase + '/api/archives/awards/' + archiveWithAwards.archive.id, archiveWithAwards);
+    return this.http.put(this.apiUrl + '/archives/awards/' + archiveWithAwards.archive.id, archiveWithAwards);
   }
   
   /*
   addArchiveAwards(awards) {
-    return this.http.post(this.urlBase + '/api/archiveawards/bulk', awards);
+    return this.http.post(this.apiUrl + '/archiveawards/bulk', awards);
   }
   
   getArchiveAwards(year) {
     let params = new HttpParams();
     params = params.append('year', year);
     
-    return this.http.get(this.urlBase + '/api/archiveawards', { params });
+    return this.http.get(this.apiUrl + '/archiveawards', { params });
   }
   */
   
@@ -363,15 +370,15 @@ export class BackendProvider {
     let params = new HttpParams();
     params = params.append('year', year);
     
-    return this.http.get(this.urlBase + '/api/archiveawards/report', { params });
+    return this.http.get(this.apiUrl + '/archiveawards/report', { params });
   }
   
   linkCategories() {
-    return this.http.get(this.urlBase + '/api/archives/categoriesLinks');
+    return this.http.get(this.apiUrl + '/archives/categoriesLinks');
   }
   
   createArchiveFromVoteResult(categoriesLinks) {
-    return this.http.post(this.urlBase + '/api/archives/fromVoteResult', categoriesLinks);
+    return this.http.post(this.apiUrl + '/archives/fromVoteResult', categoriesLinks);
   }
   
   // ===== Statistiques =====
@@ -380,27 +387,27 @@ export class BackendProvider {
     let params = new HttpParams();
     params = params.append('categoryId', category.id);
     
-    return this.http.get(this.urlBase + '/api/archiveawards/statcategory', { params });
+    return this.http.get(this.apiUrl + '/archiveawards/statcategory', { params });
   }
   
   getStatCategoryGrandChampion() {
-    return this.http.get(this.urlBase + '/api/archiveawards/statcategory');
+    return this.http.get(this.apiUrl + '/archiveawards/statcategory');
   }
   
   getStatUser(user) {
     let params = new HttpParams();
     params = params.append('userId', user.id);
     
-    return this.http.get(this.urlBase + '/api/archiveawards/statuser', { params });
+    return this.http.get(this.apiUrl + '/archiveawards/statuser', { params });
   }
   
   getStatRecords() {
-    return this.http.get(this.urlBase + '/api/archiveawards/statrecords');
+    return this.http.get(this.apiUrl + '/archiveawards/statrecords');
   }
   
   // ===== Imports =====
   
   restoreByURL(restoreURL) {
-    return this.http.post(this.urlBase + '/api/restore/url', restoreURL);
+    return this.http.post(this.apiUrl + '/restore/url', restoreURL);
   }
 }
