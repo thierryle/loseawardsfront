@@ -31,10 +31,10 @@ export class StatUserPage {
     public util: UtilProvider) {
     this.user = this.navParams.get('user');
     this.categories = this.navParams.get('categories');
-    
+
     // Spinner de chargement
     let loading = this.util.loading('Chargement en cours...');
-    
+
     this.backend.getStatUser(this.user).subscribe(
       data => {
         this.stat = data;
@@ -44,7 +44,7 @@ export class StatUserPage {
       },
       error => {
         this.util.handleError(error);
-        loading.dismiss();        
+        loading.dismiss();
       });
   }
 
@@ -54,23 +54,28 @@ export class StatUserPage {
   dismiss() {
     this.viewCtrl.dismiss();
   }
-  
+
   getWonCategories() {
+    if (this.stat.awardsByCategory == null) {
+      return [];
+    }
     return Object.keys(this.stat.awardsByCategory);
   }
-  
+
   /**
    * Calcule le total des récompenses et des catégories.
    */
   setTotal() {
-    for (let categoryId of Object.keys(this.stat.awardsByCategory)) {
-      if (categoryId != '-1') {
-        this.nbAwards += this.stat.awardsByCategory[categoryId].length;
-        this.nbCategories++;
-      }      
+    if (this.stat.awardsByCategory != null) {
+      for (let categoryId of Object.keys(this.stat.awardsByCategory)) {
+        if (categoryId != '-1') {
+          this.nbAwards += this.stat.awardsByCategory[categoryId].length;
+          this.nbCategories++;
+        }
+      }
     }
   }
-  
+
   buildCharts() {
     this.divisionChart = new Chart({
       chart: { type: 'pie' },
@@ -83,7 +88,7 @@ export class StatUserPage {
       },
       series: [{ data: this.stat.graphicsData }]
     });
-    
+
     this.progressionChart = new Chart({
       title: { text: null },
       credits: { enabled: false },
@@ -103,6 +108,6 @@ export class StatUserPage {
         name: 'Classement',
         data: this.stat.progressionGraphicsData.ranks
       }]
-    });    
+    });
   }
 }

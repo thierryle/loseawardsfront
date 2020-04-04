@@ -48,12 +48,12 @@
       {{util.getPlural(nbCategories, "cat&eacute;gorie")}}
     </ion-item>
     <!-- Grand Champion -->
-    <ion-item *ngIf="stat.awardsByCategory[-1] != null && stat.awardsByCategory[-1].length > 0" text-wrap>
+    <ion-item *ngIf="stat.awardsByCategory != null && stat.awardsByCategory[-1] != null && stat.awardsByCategory[-1].length > 0" text-wrap>
       <b>Grand Champion :</b> {{stat.awardsByCategory[-1].length}} fois
       ({{stat.awardsByCategory[-1].join(', ')}})
     </ion-item>
   </ion-list>
-  
+
   <!-- Onglets des statistiques -->
   <ion-segment [(ngModel)]="statType">
     <ion-segment-button value="division">
@@ -63,7 +63,7 @@
       Progression
     </ion-segment-button>
   </ion-segment>
-  
+
   <!-- Statistiques de répartition -->
   <ng-container [ngSwitch]="statType">
     <div *ngSwitchCase="'division'" [chart]="divisionChart"></div>

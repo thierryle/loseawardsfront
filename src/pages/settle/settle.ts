@@ -26,12 +26,12 @@ export class SettlePage {
     this.categories = this.navParams.get('categories');
     this.winnersByCategory = this.navParams.get('winnersByCategory');
     this.decisionsByCategory = this.navParams.get('decisionsByCategory');
-    
+
     this.decisions = [];
     for (let categoryId of this.categories) {
       this.decisions.push({
         'categoryId': categoryId,
-        'nominatedId': this.decisionsByCategory[categoryId]
+        'nominatedId': this.decisionsByCategory != null ? this.decisionsByCategory[categoryId] : null
       });
     }
   }
@@ -42,7 +42,7 @@ export class SettlePage {
   dismiss() {
     this.viewCtrl.dismiss();
   }
-  
+
   save() {
     this.viewCtrl.dismiss(this.decisions);
   }

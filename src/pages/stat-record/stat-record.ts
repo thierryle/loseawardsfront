@@ -24,32 +24,32 @@ export class StatRecordPage {
     public util: UtilProvider) {
     this.categories = this.navParams.get('categories');
     this.users = this.navParams.get('users');
-    
+
     // Spinner de chargement
     let loading = this.util.loading('Chargement en cours...');
-    
+
     this.backend.getStatRecords().subscribe(
       data => {
-        this.recordsByCategory = data;
+        this.recordsByCategory = data['usersAndRecords'];
         loading.dismiss();
       },
       error => {
         this.util.handleError(error);
-        loading.dismiss();        
+        loading.dismiss();
       });
   }
 
   ionViewDidLoad() {
   }
-  
+
   dismiss() {
     this.viewCtrl.dismiss();
   }
-  
+
   getCategoriesIds() {
     return Object.keys(this.recordsByCategory);
   }
-  
+
   getUsersNames(categoryId) {
     let usersIds = [];
     let usersAndRecords = this.recordsByCategory[categoryId];

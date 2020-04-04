@@ -37,7 +37,7 @@
             <ion-input disabled="true" type="number" [(ngModel)]="archive.year" [ngModelOptions]="{ standalone: true }"></ion-input >
           </ion-item>
         </ng-template>
-      
+
         <!-- Parcours des catégories -->
         <ion-item *ngFor="let categoryId of archive.categoriesIds">
           <ion-label floating color="primary">Vainqueurs de la cat&eacute;gorie {{util.getCategoryNameFromList(categoryId, categories)}}</ion-label>
@@ -58,7 +58,7 @@
         </ion-item>
       </form>
     </ion-list>
-    
+
     <!-- Classement -->
     <ul *ngIf="archive.ranking != null">
       <ng-container *ngFor="let rank of getRankingKeys()">
@@ -70,12 +70,21 @@
         </li>
       </ng-container>
     </ul>
-    
+
+    <!-- Rapport de mi-saison-->
+    <ion-list>
+      <ion-item>
+        <ion-label floating color="primary">Rapport de mi-saison</ion-label>
+        <ion-textarea [(ngModel)]="awardsAndReport.archiveReport.midReport" class="report"></ion-textarea>
+      </ion-item>
+    </ion-list>
+
     <!-- Rapport -->
     <ion-list>
         <ion-item>
           <ion-label floating color="primary">Rapport</ion-label>
-          <ion-textarea [(ngModel)]="awardsAndReport.archiveReport.report" class="report" (ionChange)="setDirty()"></ion-textarea>
+<!--          <ion-textarea [(ngModel)]="awardsAndReport.archiveReport.report" class="report" (ionChange)="setDirty()"></ion-textarea>-->
+          <ion-textarea [(ngModel)]="awardsAndReport.archiveReport.report" class="report"></ion-textarea>
         </ion-item>
     </ion-list>
 

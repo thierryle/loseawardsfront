@@ -33,25 +33,34 @@ export class ArchivePage {
   ionViewDidEnter() {
     this.loadArchive();
   }
-  
+
   loadArchive() {
     // Spinner de chargement
     let loading = this.util.loading('Chargement en cours...');
-    
+
     // Appel du backend
     this.backend.getArchiveBundle().subscribe(
       data => {
         this.bundle = data;
+        if (this.bundle.archiveUsers == null) {
+          this.bundle.archiveUsers = [];
+        }
+        if (this.bundle.archiveCategories == null) {
+          this.bundle.archiveCategories = [];
+        }
+        if (this.bundle.losersByYear == null) {
+          this.bundle.losersByYear = [];
+        }
         loading.dismiss();
       },
       error => {
         this.util.handleError(error);
-        loading.dismiss();        
+        loading.dismiss();
       });
   }
-  
+
   // ===== Catégories =====
-  
+
   addCategory() {
     let alert = this.alertCtrl.create({
       title: 'Nouvelle catégorie',
@@ -65,12 +74,12 @@ export class ArchivePage {
     });
     alert.present();
   }
-  
+
   addCategoryBackend(data) {
     if (data['name'] == null || data['name'] == '') {
       return false;
     }
-            
+
     let category = { id: null, name: data['name'] };
     this.backend.addArchiveCategory(category).subscribe(
       data => {
@@ -81,7 +90,7 @@ export class ArchivePage {
         this.util.handleError(error);
       });
   }
-  
+
   editCategory(category) {
     let alert = this.alertCtrl.create({
       title: 'Modification de la catégorie',
@@ -95,7 +104,7 @@ export class ArchivePage {
     });
     alert.present();
   }
-  
+
   updateCategoryBackend(category, data) {
     if (data['name'] == null || data['name'] == '') {
       return false;
@@ -115,16 +124,16 @@ export class ArchivePage {
         this.util.handleError(error);
       });
   }
-  
+
   deleteCategory(event, category) {
     event.stopPropagation();
     this.util.confirm(
       'Suppression de la catégorie',
       'La suppression de la catégorie entraînera la suppression des archives liées. Etes-vous sûr de vouloir la supprimer ?',
       this.deleteCategoryBackend.bind(this),
-      category);    
+      category);
   }
-  
+
   deleteCategoryBackend(category) {
     this.backend.deleteArchiveCategory(category).subscribe(
       () => {
@@ -135,9 +144,9 @@ export class ArchivePage {
         this.util.handleError(error);
       });
   }
-  
+
   // ===== Utilisateurs =====
-  
+
   addUser() {
     let alert = this.alertCtrl.create({
       title: 'Nouveau user',
@@ -154,7 +163,7 @@ export class ArchivePage {
     });
     alert.present();
   }
-  
+
   addUserBackend(data) {
     if (!this.checkUserData(data)) {
       return false;
@@ -168,7 +177,7 @@ export class ArchivePage {
         this.util.handleError(error);
       });
   }
-  
+
   editUser(user) {
     let alert = this.alertCtrl.create({
       title: 'Modification du compétiteur',
@@ -185,7 +194,7 @@ export class ArchivePage {
     });
     alert.present();
   }
-  
+
   updateUserBackend(user, data) {
     if (!this.checkUserData(data)) {
       return false;
@@ -208,7 +217,7 @@ export class ArchivePage {
         this.util.handleError(error);
       });
   }
-  
+
   checkUserData(data) {
     if (data['firstName'] == null || data['firstName'] == '') {
       return false;
@@ -221,7 +230,7 @@ export class ArchivePage {
     }
     return true;
   }
-  
+
   deleteUser(event, user) {
     event.stopPropagation();
     this.util.confirm(
@@ -230,7 +239,7 @@ export class ArchivePage {
       this.deleteUserBackend.bind(this),
       user);
   }
-  
+
   deleteUserBackend(user) {
     this.backend.deleteArchiveUser(user).subscribe(
       () => {
@@ -246,22 +255,22 @@ export class ArchivePage {
         this.util.handleError(error);
       });
   }
-  
+
   // ===== Archive =====
-  
+
   addArchive() {
     this.navCtrl.push(ArchiveDetailPage, { 'users': this.bundle.archiveUsers, 'categories': this.bundle.archiveCategories });
   }
-  
+
   editArchive(archive) {
     this.navCtrl.push(ArchiveDetailPage, { 'users': this.getRestrictedUsers(archive.year), 'categories': this.bundle.archiveCategories, 'archive': archive });
   }
-  
+
   deleteArchive(event, archive) {
     event.stopPropagation();
-    this.util.confirm('Suppression de l\'archive', 'Etes-vous sûr de vouloir supprimer l\'archive ?', this.deleteArchiveBackend.bind(this), archive);   
+    this.util.confirm('Suppression de l\'archive', 'Etes-vous sûr de vouloir supprimer l\'archive ?', this.deleteArchiveBackend.bind(this), archive);
   }
-  
+
   deleteArchiveBackend(archive) {
     this.backend.deleteArchive(archive).subscribe(
       () => {
@@ -277,7 +286,7 @@ export class ArchivePage {
         this.util.handleError(error);
       });
   }
-  
+
   getRestrictedUsers(year) {
     let restrictedUsers = [];
     for (let user of this.bundle.archiveUsers) {
@@ -285,38 +294,38 @@ export class ArchivePage {
         restrictedUsers.push(user);
       }
     }
-    
+
     return restrictedUsers;
   }
-  
+
   getLosersByYear(year) {
     let usersIds = this.bundle.losersByYear[year];
     return this.util.getUsersNamesFromList(usersIds, this.bundle.archiveUsers);
   }
-  
+
   // ===== Statistiques =====
-  
+
   statCategory(event, category) {
     if (event != null) {
       event.stopPropagation();
-    }    
+    }
     let modal = this.modalCtrl.create(StatCategoryPage, { 'category': category, 'users': this.bundle.archiveUsers });
     modal.present();
   }
-  
+
   statCategoryGrandChampion() {
     let modal = this.modalCtrl.create(StatCategoryPage, { 'category': null, 'users': this.bundle.archiveUsers });
     modal.present();
   }
-  
+
   statUser(event, user) {
     if (event != null) {
       event.stopPropagation();
-    }    
+    }
     let modal = this.modalCtrl.create(StatUserPage, { 'user': user, 'categories': this.bundle.archiveCategories });
     modal.present();
   }
-  
+
   statRecords() {
     let modal = this.modalCtrl.create(StatRecordPage, { 'categories': this.bundle.archiveCategories, 'users': this.bundle.archiveUsers });
     modal.present();
